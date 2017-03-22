@@ -1,7 +1,5 @@
 <?php
 
-use SoftCache\SoftCacheTrait;
-
 /**
  * Class SoftCacheTraitTest
  * @property TestClass $Class
@@ -18,16 +16,34 @@ class SoftCacheTraitTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals([2017, 2018, 2019, 2020, 2021], $actual);
 	}
 
-	public function test_methodWithCache() {
+	public function test_methodWithCacheThreeTimes() {
+
+		$this->Class = $this->getMock('TestClass', ['getNextYearsWithoutCache']);
+
+		$this->Class
+			->expects($this->once())
+			->method('getNextYearsWithoutCache')
+			->will($this->returnValue([2017, 2018, 2019, 2020, 2021]));
+
 		$actual = $this->Class->getNextYearsWithCache(2016, 5);
 		$this->assertEquals([2017, 2018, 2019, 2020, 2021], $actual);
 
-		// @todo execute again and assert getNextYearsWithoutCache isnt called
+		$actual = $this->Class->getNextYearsWithCache(2016, 5);
+		$this->assertEquals([2017, 2018, 2019, 2020, 2021], $actual);
+
+		$actual = $this->Class->getNextYearsWithCache(2016, 5);
+		$this->assertEquals([2017, 2018, 2019, 2020, 2021], $actual);
+	}
+
+	public function test_methodWithCache() {
+		$actual = $this->Class->getNextYearsWithCache(2016, 5);
+		$this->assertEquals([2017, 2018, 2019, 2020, 2021], $actual);
 	}
 
 }
 
 class TestClass {
+
 	use SoftCache\SoftCacheTrait;
 
 	public function getNextYearsWithCache($yearFrom, $years) {
