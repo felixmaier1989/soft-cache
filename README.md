@@ -1,5 +1,5 @@
 # soft-cache
-Soft cache for your class methods. Sometimes your PHP application runs the same method with the same arguments during the same code execution. Better caching the output of it, especially when queryin a databse or an API.
+Soft cache for your class methods. Sometimes, during one script run, one method is executed several times with the same arguments. Better caching the output of it, especially when querying a databse or an API.
 
 ## Usage
 
