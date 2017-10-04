@@ -17,7 +17,7 @@ trait SoftCacheTrait {
 	 * @param $output mixed
 	 */
 	public function writeMethodCache($method, array $args, $output) {
-		$cache_key = serialize($args);
+		$cache_key = $this->getCacheKey($args);
 		$this->cache[$method][$cache_key] = $output;
 	}
 
@@ -27,7 +27,7 @@ trait SoftCacheTrait {
 	 * @return mixed
 	 */
 	public function readMethodCache($method, array $args) {
-		$cache_key = serialize($args);
+		$cache_key = $this->getCacheKey($args);
 		if ($this->checkMethodCache($method, $args)) {
 			return $this->cache[$method][$cache_key];
 		}
@@ -40,7 +40,7 @@ trait SoftCacheTrait {
 	 * @return bool
 	 */
 	public function checkMethodCache($method, array $args) {
-		$cache_key = serialize($args);
+		$cache_key = $this->getCacheKey($args);
 		if (!array_key_exists($method, $this->cache)) {
 			return false;
 		}
@@ -48,5 +48,14 @@ trait SoftCacheTrait {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Generate an unique key
+	 * @param array $args
+	 * @return string
+	 */
+	public function getCacheKey(array $args) {
+		return md5(serialize($args));
 	}
 }
