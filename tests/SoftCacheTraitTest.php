@@ -11,6 +11,14 @@ class SoftCacheTraitTest extends \PHPUnit_Framework_TestCase {
 		$this->Class = new TestClass();
 	}
 
+	public function test_getCacheKey() {
+		$cache_key1 = $this->Class->getCacheKey([2015]);
+		$cache_key2 = $this->Class->getCacheKey([2016]);
+		$this->assertNotEmpty($cache_key1);
+		$this->assertNotEmpty($cache_key2);
+		$this->assertNotEquals($cache_key1, $cache_key2);
+	}
+
 	public function test_methodWithoutCache() {
 		$actual = $this->Class->getNextYearsWithoutCache(2016, 5);
 		$this->assertEquals([2017, 2018, 2019, 2020, 2021], $actual);
