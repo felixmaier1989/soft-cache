@@ -56,6 +56,6 @@ trait SoftCacheTrait {
 	 * @return string
 	 */
 	public function getCacheKey(array $args) {
-		return serialize($args);
+		return md5(serialize($args));
 	}
 }
