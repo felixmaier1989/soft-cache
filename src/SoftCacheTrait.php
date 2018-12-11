@@ -17,8 +17,12 @@ trait SoftCacheTrait {
 	 * @param $output mixed
 	 */
 	public function writeMethodCache($method, array $args, $output) {
-		$cache_key = $this->getCacheKey($args);
-		$this->cache[$method][$cache_key] = $output;
+		try {
+			$cache_key = $this->getCacheKey($args);
+			$this->cache[$method][$cache_key] = $output;
+		} catch (\Exception $e) {
+
+		}
 	}
 
 	/**
@@ -27,10 +31,15 @@ trait SoftCacheTrait {
 	 * @return mixed
 	 */
 	public function readMethodCache($method, array $args) {
-		$cache_key = $this->getCacheKey($args);
-		if ($this->checkMethodCache($method, $args)) {
-			return $this->cache[$method][$cache_key];
+		try {
+			$cache_key = $this->getCacheKey($args);
+			if ($this->checkMethodCache($method, $args)) {
+				return $this->cache[$method][$cache_key];
+			}
+		} catch (\Exception $e) {
+			return false;
 		}
+
 		return false;
 	}
 
@@ -40,11 +49,15 @@ trait SoftCacheTrait {
 	 * @return bool
 	 */
 	public function checkMethodCache($method, array $args) {
-		$cache_key = $this->getCacheKey($args);
-		if (!array_key_exists($method, $this->cache)) {
-			return false;
-		}
-		if (!array_key_exists($cache_key, $this->cache[$method])) {
+		try {
+			$cache_key = $this->getCacheKey($args);
+			if (!array_key_exists($method, $this->cache)) {
+				return false;
+			}
+			if (!array_key_exists($cache_key, $this->cache[$method])) {
+				return false;
+			}
+		} catch (\Exception $e) {
 			return false;
 		}
 		return true;
